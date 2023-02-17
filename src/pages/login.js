@@ -11,21 +11,44 @@ import Link from 'next/link';
 import { useForm } from "react-hook-form";
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { MdOutlineCancel } from 'react-icons/md';
+import Toast from 'react-bootstrap/Toast';
+import ToastContainer from 'react-bootstrap/ToastContainer';
+import apiClient from '@/apiClient';
+import Image from 'react-bootstrap/Image'
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
+import { useRouter } from 'next/router';
 
 export default function Login() {
 
-    const [enviare, setEnviare] = useState(false)
+    const [enviare, setEnviare] = useState(false);
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
-
-
+    const [show, setShow] = useState(false);
+    const [messageError, setMessageError] = useState("");
+    const router = useRouter();
 
     const getUsuarioForm = (data) => {
-        console.log(data);
+        // console.log("Data: " + JSON.stringify(data));
+        console.log("validando credenciales");
+        apiClient.post('/authenticate',data)
+        .then(response =>{
+            console.log(response.data);
+            setShow(true);
+            setMessageError(`Bienvenido: ${response.data.user.nombre}`);
+            router.push('/');
+        })
+        .catch(error =>{
+            setShow(true);
+            if(error.response != null){
+                setMessageError(error.response.data.message);
+            }
+        });
     }
 
     return (
+        
         <div>
-
+            
             <div className='container mt-5'>
                 <Form onSubmit={handleSubmit(getUsuarioForm)}>
                     {errors.email?.type === 'required' && <span style={{ color: 'red' }}>El campo email es requerido</span>}
@@ -99,6 +122,27 @@ export default function Login() {
                     </Button>
                 </Form>
             </div>
+            <>
+            <Row>
+                <Col xs={6}>
+                    <ToastContainer className="p-3" position="middle-center">
+                        <Toast onClose={() => setShow(false)} show={show} delay={3000} autohide bg="Danger" >
+                        <Toast.Header>
+                            <Image
+                            src="changarrito.png"
+                            className="rounded me-2"
+                            alt=""
+                            width="20" height="20"
+                            />
+                            <strong className="me-auto"> Changarrito</strong>
+                            <small>just now</small>
+                        </Toast.Header>
+                        <Toast.Body>{messageError}</Toast.Body>
+                        </Toast>
+                    </ToastContainer>
+                </Col>
+            </Row>
+            </>
         </div>
     )
 }

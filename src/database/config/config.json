@@ -1,10 +1,10 @@
 {
   "development": {
-    "username": "root",
-    "password": null,
-    "database": "dbBox_23",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "username": "sa",
+    "password": "Transformacion22#",
+    "database": "changarrito",
+    "host": "172.23.3.198",
+    "dialect": "mssql"
   },
   "test": {
     "username": "root",

@@ -8,6 +8,7 @@ import { Col } from 'react-bootstrap';
 import { FaHamburger } from "react-icons/fa";
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import Link from 'next/link'
+import Nav from 'react-bootstrap/Nav';
 
 function Menu() {
     const [show, setShow] = useState(false);
@@ -55,7 +56,9 @@ function Menu() {
                             </Offcanvas.Title>
                         </Offcanvas.Header>
                         <Offcanvas.Body>
-
+                        <Nav className="justify-content-end flex-grow-1 pe-3">
+                            <Nav.Link href="/users">Usuarios</Nav.Link>
+                        </Nav>
                         </Offcanvas.Body>
                     </Navbar.Offcanvas>
                 </Container>

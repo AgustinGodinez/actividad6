@@ -36,6 +36,7 @@ export default function Home() {
     //Recuperar los datos del Api
     apiClient.get('/products')
     .then(response =>{
+      console.log(response.data)
       setProducts(response.data);
     })
     .catch(error =>{
