@@ -1,70 +1,61 @@
-'use client'
-import Container from 'react-bootstrap/Container';
-import React, { useState } from 'react';
-import Navbar from 'react-bootstrap/Navbar';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import { Col } from 'react-bootstrap';
-import { FaHamburger } from "react-icons/fa";
-import Offcanvas from 'react-bootstrap/Offcanvas';
+import Container from 'react-bootstrap/Container'
+import Nav from 'react-bootstrap/Nav'
+import Navbar from 'react-bootstrap/Navbar'
+import NavDropdown from 'react-bootstrap/NavDropdown'
+import Offcanvas from 'react-bootstrap/Offcanvas'
 import Link from 'next/link'
-import Nav from 'react-bootstrap/Nav';
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Stack from 'react-bootstrap/Stack'
+import Image from 'react-bootstrap/Image'
+import OpcionesMenu from './menuItems'
 
-function Menu() {
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
-    return (
-        <>
-            <Navbar bg="dark" variant="dark" expand='md' sticky="top">
-                <Container fluid>
-                    <Col sm="1">
-                        <Button>
-                            <Link variant="primary" href="/" style={{ color: "white" }}>inicio</Link>
-                        </Button>
+const menu = [
+{path: '/admin/category',name: 'Categorias de Productos'},
+{id: 1, path: '/admin/product', name: 'Lista de Productos'},
+{id: 2, path: '/admin/Orders/', name: 'Pedidos'},
+{id: 3, path: '/admin/Reviews/',name: 'Reviews'},
+{id: 4, path: '/admin/sellers',name: 'Vendedores'},
+{id: 5, path: '/admin/user',name: 'Usuarios'},
+{id: 6, path: '/admin/earnings',name: 'Ventas'}
+]
+const expand = "true"
+export default function OffcanvasExample() {
+  return (
+    <>
+        <Navbar expand={expand} className="MenuAll">
+          <Container fluid>
+            <Container>
+                <Row>
+                    <Col xs={6}>
+                        <Link href="/">
+                            <Navbar.Brand>
+                                <img src="/Changarrito.png" alt="Logo" width="60" height="60" style={{borderRadius: '50%'}} />
+                            </Navbar.Brand>
+                        </Link>
                     </Col>
-                    <Col sm="1">
-                        <Button>
-                            <Link variant="primary" href="/login" style={{ color: "white" }}>sign in</Link>
-                        </Button>
+                    <Col className='MenuItemAllAlign'>
+                        <Link href="/" className='MenuItemAll'>
+                            Inicio
+                        </Link>
                     </Col>
-                    <Col sm="1">
-                        <Button>
-                            <Link variant="primary" href="/register" style={{ color: "white" }}>sign up</Link>
-                        </Button>
+                    <Col className='MenuItemAllAlign'> 
+                        <Link href="about" className='MenuItemAll' style={{textAlign: 'center'}}>
+                            Nosotros
+                        </Link>
                     </Col>
-                    <Col sm="1">
-                        <Form.Control
-                            type="search"
-                            placeholder="Buscar... "
-                            aria-label="Search"
-                        />
+                    <Col className='MenuItemAllAlign'>
+                        <Link href="contact" className='MenuItemAll'>
+                            Contacto
+                        </Link>
                     </Col>
-                    <Col sm="6" className='text-center'>
-                        <Navbar.Brand href="#home">
-                            <h1 className="title" style={{ lineHeight: "18px", paddingTop: "1rem" }}>Changarrito</h1>
-                        </Navbar.Brand>
-                    </Col>
-                    <Col sm="1">
-                        <Button variant="outline-secondary" onClick={handleShow}><FaHamburger style={{ fontSize: "48px", color: "white" }} /></Button>
-                    </Col>
-                    <Navbar.Offcanvas show={show} onHide={handleClose} placement="end">
-                        <Offcanvas.Header closeButton>
-                            <Offcanvas.Title id={`offcanvasNavbarLabel-expand-md`}>
-                                Menu
-                            </Offcanvas.Title>
-                        </Offcanvas.Header>
-                        <Offcanvas.Body>
-                        <Nav className="justify-content-end flex-grow-1 pe-3">
-                            <Nav.Link href="/users">Usuarios</Nav.Link>
-                        </Nav>
-                        </Offcanvas.Body>
-                    </Navbar.Offcanvas>
-                </Container>
-            </Navbar>
-        </>
-    );
+                </Row>
+            </Container>
+            
+            <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`}  className="menuBotton"/>
+            <OpcionesMenu/>
+          </Container>
+        </Navbar>
+    </>
+  )
 }
-
-export default Menu;

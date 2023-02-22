@@ -3,46 +3,48 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useEffect } from 'react'
 import { Button, Form, Stack } from 'react-bootstrap'
-import InputGroup from 'react-bootstrap/InputGroup';
-import { HiUserCircle } from 'react-icons/hi';
-import { RiLockPasswordFill } from 'react-icons/ri';
-import { IconContext } from "react-icons";
-import Link from 'next/link';
-import { useForm } from "react-hook-form";
-import { AiOutlineCheckCircle } from 'react-icons/ai';
-import { MdOutlineCancel } from 'react-icons/md';
-import Toast from 'react-bootstrap/Toast';
-import ToastContainer from 'react-bootstrap/ToastContainer';
-import apiClient from '@/apiClient';
+import InputGroup from 'react-bootstrap/InputGroup'
+import { HiUserCircle } from 'react-icons/hi'
+import { RiLockPasswordFill } from 'react-icons/ri'
+import { IconContext } from "react-icons"
+import Link from 'next/link'
+import { useForm } from "react-hook-form"
+import { AiOutlineCheckCircle } from 'react-icons/ai'
+import { MdOutlineCancel } from 'react-icons/md'
+import Toast from 'react-bootstrap/Toast'
+import ToastContainer from 'react-bootstrap/ToastContainer'
+import apiClient from '@/apiClient'
 import Image from 'react-bootstrap/Image'
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import { useRouter } from 'next/router';
+import Col from 'react-bootstrap/Col'
+import Row from 'react-bootstrap/Row'
+import { useRouter } from 'next/router'
+import Layout from '../components/login/_layout'
+
 
 export default function Login() {
 
-    const [enviare, setEnviare] = useState(false);
-    const { register, handleSubmit, watch, formState: { errors } } = useForm();
-    const [show, setShow] = useState(false);
-    const [messageError, setMessageError] = useState("");
-    const router = useRouter();
+    const [enviare, setEnviare] = useState(false)
+    const { register, handleSubmit, watch, formState: { errors } } = useForm()
+    const [show, setShow] = useState(false)
+    const [messageError, setMessageError] = useState("")
+    const router = useRouter()
 
     const getUsuarioForm = (data) => {
-        // console.log("Data: " + JSON.stringify(data));
-        console.log("validando credenciales");
+        // console.log("Data: " + JSON.stringify(data))
+        console.log("validando credenciales")
         apiClient.post('/authenticate',data)
         .then(response =>{
-            console.log(response.data);
-            setShow(true);
-            setMessageError(`Bienvenido: ${response.data.user.nombre}`);
-            router.push('/');
+            console.log(response.data)
+            setShow(true)
+            setMessageError(`Bienvenido: ${response.data.user.nombre}`)
+            router.push('/')
         })
         .catch(error =>{
-            setShow(true);
+            setShow(true)
             if(error.response != null){
-                setMessageError(error.response.data.message);
+                setMessageError(error.response.data.message)
             }
-        });
+        })
     }
 
     return (
@@ -144,5 +146,11 @@ export default function Login() {
             </Row>
             </>
         </div>
+    )
+}
+
+Login.getLayout = function getLayout(page) {
+    return (
+        <Layout>{page}</Layout>
     )
 }

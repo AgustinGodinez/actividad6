@@ -8,22 +8,26 @@ import Col from 'react-bootstrap/Col';
 import Table from 'react-bootstrap/Table';
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import apiClient from '@/apiClient';
+import { BsEraser } from "react-icons/bs";
 
 
 export default function Login() {
-    const [users, setUsers] = useState([]);
+    const [nombre, setNombre] = React.useState([]);
 
     useEffect( () =>{
         //Recuperar los datos del Api
         apiClient.get('/user')
         .then(response =>{
-            console.log(response.data);
-            setUsers(response.data);
+            setNombre(response.data);
         })
         .catch(error =>{
           console.error(error);
         })
     },[]);
+
+    const handlerDelete = (e) =>{
+        console.log(e);
+    }
 
     return (
         <>
@@ -46,16 +50,22 @@ export default function Login() {
                         <th>Apellido Paterno</th>
                         <th>Apellido Materno</th>
                         <th>Domicilio</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    { users.map( (user) => {
-                        <tr key={user.id}>
-                            <td>{user.nombre}</td>
-                            <td>{user.apellido_paterno}</td>
-                            <td>{user.apellido_materno}</td>
-                            <td>{user.calle}  {user.num_ext}</td>
-                        </tr>
+                    { 
+                        nombre.map( (item) => {
+                        return [(
+                            <tr key={item.id} item>
+                                <td>{item.id}</td>
+                                <td>{item.nombre}</td>
+                                <td>{item.apellido_paterno}</td>
+                                <td>{item.apellido_materno}</td>
+                                <td>{item.calle} #{item.num_ext}</td>
+                                <td> <BsEraser onClick={handlerDelete}/></td>
+                            </tr>
+                            )]
                         })
                     }
                 </tbody>

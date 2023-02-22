@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "debug": "npm --node-options=--inspect=0.0.0.0:9229 run dev"
   },
   "dependencies": {
     "@emotion/styled": "^11.10.5",

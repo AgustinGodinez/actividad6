@@ -102,12 +102,12 @@ const addUser = async(req, res) => {
 const updateUser = async(req, res) => {
     try {
         // pasamos los datos al modelo para crear el registro
-        const user = await db.User.Update({...req.body},
+        const user = await db.User.update({...req.body},
             { fields: ['nombre','apellido_paterno','apellido_materno',
             'curp', 'fecha_nacimiento', 'email', 'password', 'calle', 'num_ext', 'num_int', 'codigo_postal', 
             'celular', 'estado', 'ciudad'],
             where: {
-                id: usuario.id
+                id: req.body.id
             }
         });
         // enviamos la respuesta
@@ -116,14 +116,18 @@ const updateUser = async(req, res) => {
             message: "Usuario registrado correctamente."
         })
     } catch (error) {
-        let errores = error.errors.map( (item) => ({
-            field: item.path,
-            error: item.message
-        }));
+        let errors = [];
+        if (error.errors) {
+            errors = error.errors.map( (item) => ({
+                field: item.path,
+                error: item.message
+            }));
+        }
+        
         res.status(400).json({
             error: true,
             message: `Ocurrio un error al procesar su solicitud ${error.message}}`,
-            errores
+            errors
         })
     }
 }

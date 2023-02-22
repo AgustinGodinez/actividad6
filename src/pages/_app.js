@@ -15,20 +15,8 @@ const work_sans = Work_Sans({
 
 
 export default function App({ Component, pageProps }) {
-  return (
-    <Layout>
-      <style jsx global>
-            {`
-              .title {
-                font-family: ${love_ya_like_a_sister.style.fontFamily};
-              }
+  // Use the layout defined at the page level, if available
+  const getLayout = Component.getLayout || ((page) => page)
 
-              html {
-                font-family: ${work_sans.style.fontFamily};
-              }
-            `}
-      </style>
-      <Component {...pageProps} />
-    </Layout>
-  )
+  return getLayout(<Component {...pageProps} />)
 }

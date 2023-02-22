@@ -18,7 +18,7 @@ export default function Footer() {
             `}
         </style>
 
-        <Container id='footer' fluid className='footer' >
+        <Container id='footer' fluid className='footer' fixed="bottom" >
             <Row className='text-center'>
                 <Col >
                     <h1 className="title"style={{ lineHeight: '140px', fontSize: '80px' }}>Changarrito</h1>

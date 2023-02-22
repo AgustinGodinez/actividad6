@@ -60,6 +60,59 @@ const findProduct = async(req, res) =>{
     }
 }
 
-const addProduct = async() =>{}
-const updateProduct = async() =>{}
-const deleteProduct = async() =>{}
+const addProduct = async(req, res ) =>{
+    try {
+        const products = await db.Product.create({...req.body});
+        res.status(200).json({products, message: "Producto registrado correctamente"});
+    } catch (error) {
+        console.log(error);
+        let errors = [];
+        if (error.errors) {
+            errors = error.errors.map( (item) => ({
+                field: item.path,
+                error: item.message
+            }));
+        }
+         
+        res.status(400).json({
+            error: true,
+            message: `Ocurrio un error al procesar su solicitud ${error.message}`,
+            errors
+        });
+    }
+    
+}
+
+const updateProduct = async(req, res) =>{
+    try {
+        // pasamos los datos al modelo para crear el registro
+        const product = await db.Product.update({...req.body},
+            { fields: ['image','title','price','start', 'ranking', 'descripcion'],
+            where: {
+                id: req.body.id
+            }
+        });
+        // enviamos la respuesta
+        res.status(200).json({
+            product,
+            message: "Producto actualizado correctamente."
+        })
+    } catch (error) {
+        let errors = [];
+        if (error.errors) {
+            errors = error.errors.map( (item) => ({
+                field: item.path,
+                error: item.message
+            }));
+        }
+        res.status(400).json({
+            error: true,
+            message: `Ocurrio un error al procesar su solicitud ${error.message}}`,
+            errors
+        })
+    }
+}
+
+const deleteProduct = async() =>{
+
+}
