@@ -1,5 +1,4 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { TextField } from '@mui/material'
 import React, { useState } from 'react'
 import { Button, FloatingLabel, Form, Image } from 'react-bootstrap'
 import { AiOutlineCheck, AiOutlineDelete, AiOutlineEdit, AiOutlineEye } from 'react-icons/ai'
@@ -26,11 +25,14 @@ export default function TableCategory({ index, categorias, onDelete }) {
     const handleChanges = (e) => {
         setData({
             ...data,
-            [e.target.name]: e.target.value
+            [e.target.name]: e.target.value,
+            /* activo:true */
         })
+        setNewData(data)
+        console.log(data);
     }
     const handleCancel = () => {
-        setData({ ...categorias })
+        setData({ ...newData })
         setEdit(!edit)
     }
 
@@ -50,7 +52,7 @@ export default function TableCategory({ index, categorias, onDelete }) {
                 :
                 <td style={{ maxWidth: "10px" }}>
                     <FloatingLabel label="nombre de la categoria" >
-                        <Form.Control type="text" name='nombre' value={data.name} style={{ height: '50px', maxWidth: '300px', minWidth: '100px' }}onChange={handleChanges} />
+                        <Form.Control type="text" name='name' value={data.name} style={{ height: '50px', maxWidth: '300px', minWidth: '100px' }}onChange={handleChanges} />
                     </FloatingLabel>
                 </td>
             }
@@ -69,7 +71,6 @@ export default function TableCategory({ index, categorias, onDelete }) {
                 <Form>
                     <Form.Check
                         type="switch"
-                        id="custom-switch"
                         name='activo'
                         defaultChecked={data.activo}
                         onChange={handleChanges}

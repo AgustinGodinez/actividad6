@@ -40,7 +40,7 @@ export default function Products() {
     ])
     const [orden, setOrden] = useState([
         { id: 423, producto: "enchiladas", cantidad: '3', fecha: '20/02/2023', direccion: "Ley Agraria #73 Axochiapan Morelos", costo: '80', estado: 'pendiente' },
-        { id: 322, producto: "hamburguesa", cantidad: '2', fecha: '10/02/2023', direccion: "Ley Agraria #73 Axochiapan Morelos", costo: '60', estado: 'pendiente' },
+        { id: 322, producto: "hamburguesa", cantidad: '2', fecha: '10/02/2023', direccion: "Ley Agraria #73 Axochiapan Morelos", costo: '60', estado: 'recibido' },
         { id: 323, producto: "Pastas", cantidad: '1', fecha: '05/02/2023', direccion: "Ley Agraria #73 Axochiapan Morelos", costo: '80', estado: 'canceladado' },
         { id: 145, producto: "cerveza corona", cantidad: '2', fecha: '02/02/2023', direccion: "Ley Agraria #73 Axochiapan Morelos", costo: '30', estado: 'recibido' },
     ]);
