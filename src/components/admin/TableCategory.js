@@ -4,6 +4,7 @@ import { Button, FloatingLabel, Form, Image } from 'react-bootstrap'
 import { AiOutlineCheck, AiOutlineDelete, AiOutlineEdit, AiOutlineEye } from 'react-icons/ai'
 import { FcCancel } from 'react-icons/fc'
 import Layout from '../layout'
+import { uploadfile } from '@/firebase/config'
 
 export default function TableCategory({ index, categorias, onDelete }) {
     const [edit, setEdit] = React.useState(false)
@@ -23,14 +24,20 @@ export default function TableCategory({ index, categorias, onDelete }) {
     }
 
     const handleChanges = (e) => {
+        let nombreFoto;
+        let datoFotos;
         setData({
             ...data,
             [e.target.name]: e.target.value,
             /* activo:true */
         })
         setNewData(data)
-        console.log(data);
+        nombreFoto = e.target.files[0].name;
+        datoFotos = e.target.files
+        uploadfile(datoFotos,nombreFoto)
     }
+
+
     const handleCancel = () => {
         setData({ ...newData })
         setEdit(!edit)
@@ -43,7 +50,7 @@ export default function TableCategory({ index, categorias, onDelete }) {
                 :
                 <td style={{ maxWidth: "10px" }}>
                     <FloatingLabel label="ID" >
-                        <Form.Control type="number" name='id' value={data.id} style={{ height: '50px', maxWidth: '200px', minWidth: '100px' }} onChange={handleChanges}/>
+                        <Form.Control type="number" name='id' value={data.id} style={{ height: '50px', maxWidth: '200px', minWidth: '100px' }} onChange={handleChanges} />
                     </FloatingLabel>
                 </td>
             }
@@ -52,7 +59,7 @@ export default function TableCategory({ index, categorias, onDelete }) {
                 :
                 <td style={{ maxWidth: "10px" }}>
                     <FloatingLabel label="nombre de la categoria" >
-                        <Form.Control type="text" name='name' value={data.name} style={{ height: '50px', maxWidth: '300px', minWidth: '100px' }}onChange={handleChanges} />
+                        <Form.Control type="text" name='name' value={data.name} style={{ height: '50px', maxWidth: '300px', minWidth: '100px' }} onChange={handleChanges} />
                     </FloatingLabel>
                 </td>
             }
@@ -63,7 +70,7 @@ export default function TableCategory({ index, categorias, onDelete }) {
                 </td>
                 :
                 <td style={{ maxWidth: '150px', minWidth: '100px' }}>
-                    <Form.Control type="file" name='src' size="sm" style={{ maxWidth: '300px', minWidth: '100px' }} onChange={handleChanges} />
+                    <Form.Control type="file" multiple name='src' size="sm" style={{ maxWidth: '300px', minWidth: '100px' }} onChange={handleChanges} />
                 </td>
 
             }
@@ -85,7 +92,7 @@ export default function TableCategory({ index, categorias, onDelete }) {
                     <Button variant="light">
                         <AiOutlineEdit className='iconAction' onClick={handleEdit} />
                     </Button>
-{/*                     <Button variant="light">
+                    {/*                     <Button variant="light">
                         <AiOutlineEye className='iconAction' onClick={mostrar} />
                     </Button> */}
                 </td>
