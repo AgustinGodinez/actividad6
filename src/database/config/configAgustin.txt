@@ -21,3 +21,33 @@
     "dialect": "mysql"
   }
 }
+
+                    <td style={{ maxWidth: "10px" }}>
+                        <FloatingLabel label="ID" >
+                            <Form.Control type="number" name='id' value={data.id} onChange={handleChanges} />
+                        </FloatingLabel>
+                    </td>
+                    <td style={{ maxWidth: "10px" }}>
+                        <FloatingLabel label="nombre de la categoria" >
+                            <Form.Control type="text" name='name' value={data.name} onChange={handleChanges} />
+                        </FloatingLabel>
+                    </td>
+                    <td style={{ maxWidth: '150px', minWidth: '100px' }}>
+                        <Form.Control type="file" name='src' size="sm" onChange={handleChanges} />
+                    </td>
+                    <td>
+                        <Form.Check
+                            type="switch"
+                            name='activo'
+                            defaultChecked={data.activo}
+                            onChange={handleChanges}
+                        />
+                    </td>
+                    <td>
+                        <Button variant="light" type="submit" value="enviar" name="enviar">
+                            <AiOutlineCheck className='iconAction' />
+                        </Button>
+                        <Button variant="light">
+                            <FcCancel className='iconAction' onClick={handleCancel} />
+                        </Button>
+                    </td>
