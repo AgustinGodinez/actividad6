@@ -29,7 +29,7 @@ export default function TableCategory({ index, categorias, onDelete }) {
         console.log(data);
     }
 
-    /* esta funcion sirve para dar una previsualizacion de la imagen puesta */
+    /* esta funcion sirve para dar una previsualizacion de la imagen puesta en el modal de modificar */
     const changeImage = (e) => {
         const reader = new FileReader();
         if (e.target.files[0]) {
@@ -37,12 +37,12 @@ export default function TableCategory({ index, categorias, onDelete }) {
             reader.onload = e => {
                 e.preventDefault();
                 setImagePrev(e.target.result)
-
             }
         }
     }
 
     const handleChanges = async (e) => {
+        /* almacena el valor del check */
         setChecked(e.target.checked)
         setData({
             ...data,
@@ -56,6 +56,7 @@ export default function TableCategory({ index, categorias, onDelete }) {
         }
         /* esta parte obtiene la url de la imagen ingresada */
         const result = await uploadfile(datosFile, nameFile)
+        /* almacenamos la url en un usestate */
         setImagenNueva(result);
     }
     /* esta es la funcion importante */
@@ -66,6 +67,7 @@ export default function TableCategory({ index, categorias, onDelete }) {
         let categoria = {
             id: datos.id.value,
             name: datos.name.value,
+            /* guarda el estado del check y de la url */
             src: imagenNueva,
             activo: checked,
         };

@@ -27,6 +27,7 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.43.1",
     "react-icons": "^4.7.1",
+    "react-items-carousel": "^2.8.0",
     "sass": "^1.57.1",
     "sequelize": "^6.28.0",
     "tedious": "^15.1.2",

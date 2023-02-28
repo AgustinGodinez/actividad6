@@ -27,6 +27,7 @@ export default function Products() {
     const [datosFile, setDatosFile] = useState(null)
     const [nameFile, setNameFile] = useState(null)
     const [checked, setChecked] = React.useState();
+    const [imagenNueva, setImagenNueva] = useState()
 
     const [categorias, setCategorias] = useState([
         { id: 233, name: "Pastas", src: "/categorias/pasta.jpg", ruta: "", activo: true },
@@ -44,20 +45,32 @@ export default function Products() {
         ruta: '',
         activo: checked,
     })
-    const handleInputChange = (event) => {
+    const handleInputChange = async (event) => {
         setChecked(event.target.checked)
         setDatos({
             ...datos,
             [event.target.name]: event.target.value,
-            activo:checked
+            activo: checked
         })
         if (event.target.files) {
             changeImage(event)
             setNameFile(event.target.files[0].name);
-            setDatosFile(event.target.files)
+            setDatosFile(event.target.files[0])
         }
+        /* esta parte obtiene la url de la imagen ingresada */
+        const result = await uploadfile(datosFile, nameFile)
+        /* almacenamos la url en un usestate */
+        setImagenNueva(result);
     }
 
+    const enviarDatos = (e) => {
+        e.preventDefault()
+        const categoriasCopy = [...categorias];
+        categoriasCopy.push(datos)
+        setCategorias([...categoriasCopy])
+        console.log(categorias);
+        handleClose()
+    }
     const handleDelete = (index) => {
         const categoriasCopy = [...categorias];
         categoriasCopy.splice(index, 1)
@@ -75,14 +88,6 @@ export default function Products() {
         }
     }
 
-    const enviarDatos = (e) => {
-        e.preventDefault()
-        const categoriasCopy = [...categorias];
-        categoriasCopy.push(datos)
-        setCategorias([...categoriasCopy])
-        uploadfile(datosFile, nameFile)
-        handleClose()
-    }
 
     return (
         <>
