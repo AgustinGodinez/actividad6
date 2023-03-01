@@ -60,6 +60,7 @@ export default function Products() {
         /* esta parte obtiene la url de la imagen ingresada */
         const result = await uploadfile(datosFile, nameFile)
         /* almacenamos la url en un usestate */
+        console.log(result);
         setImagenNueva(result);
     }
 
