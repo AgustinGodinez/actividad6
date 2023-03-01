@@ -3,7 +3,7 @@
     "username": "sa",
     "password": "Transformacion22#",
     "database": "changarrito",
-    "host": "172.23.3.198",
+    "host": "172.30.2.128",
     "dialect": "mssql"
   },
   "test": {

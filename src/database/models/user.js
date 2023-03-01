@@ -63,9 +63,6 @@ module.exports = (sequelize, DataTypes) => {
     curp: {
       type: DataTypes.STRING,
       validate:{
-        notEmpty: {
-          msg: 'El CURP es un valor requerido'
-        },
         isAlphanumeric: {
           msg: 'El CURP solo se permite caracteres alfanumericos'
         },
@@ -77,6 +74,18 @@ module.exports = (sequelize, DataTypes) => {
           if ( !/^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/i.test(value)) {
             throw new Error('La estructura de la CURP es invalida')
           }
+        }
+      }
+    },
+    rfc: {
+      type: DataTypes.STRING,
+      validate:{
+        isAlphanumeric: {
+          msg: 'El RFC solo se permite caracteres alfanumericos'
+        },
+        len: {
+          args: [12,13],
+          msg: 'El RFC debe contener 12 caracteres personas fisicas y 13 caracteres para personas morales'
         }
       }
     },
@@ -119,56 +128,8 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    calle: {
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: {
-          msg: 'Calle es un valor requerido'
-        },
-        max: {
-          arg: 300,
-          msg: 'Calle solo se permite 300 caracteres'
-        }
-      }
-    },
-    num_ext: {
-      type: DataTypes.INTEGER,
-      validate: {
-        notEmpty: {
-          msg: 'Numero Exterior es un valor requerido'
-        },
-        len: {
-          arg: 5,
-          msg: 'Num Exterior solo se permite 5 caracteres'
-        }
-      }
-    },
-    num_int:{
-      type: DataTypes.STRING,
-      validate: {
-        max: {
-          arg: 20,
-          msg: 'Num Interior solo se permite 20 caracteres'
-        }
-      }
-    },
-    codigo_postal: {
-      type: DataTypes.INTEGER,
-      validate: {
-        notEmpty: {
-          msg: 'Codigo Postal es un valor requerido'
-        },
-        isNumeric:{
-          msg: 'Codigo Postal solo se acepta valores numericos'
-        },
-        len: {
-          arg: [5],
-          msg: 'Codigo postal Solo se permite 5 caracteres numericos'
-        }
-      }
-    },
     celular: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       validate: {
         notEmpty: {
           msg: 'Celular es un valor requerido'
@@ -182,30 +143,29 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    estado: {
+    imagen_url: {
       type: DataTypes.STRING,
-      validate: {
-        notEmpty: {
-          msg: 'Estado es un valor requerido'
-        },
+      validate:{
         max: {
           arg: 250,
-          msg: 'Solo se permiten maximo 250 caracteres'
+          msg: 'El url de imagen solo permite 250 caracteres'
         }
+
       }
     },
-    ciudad: {
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: {
-          msg: 'Ciudad es un valor requerido'
-        },
-        max: {
-          arg: 300,
-          msg: 'Solo se permiten maximo 400 caracteres'
-        }
-      }
+    rol_id : {
+      type: DataTypes.INTEGER,
+      defaultValue: 1
     },
+    created_by:{
+      type: DataTypes.INTEGER
+    },
+    updated_by:{
+      type: DataTypes.INTEGER
+    },
+    deleted_by:{
+      type: DataTypes.INTEGER
+    }
   }, {
     hooks:{
       beforeCreate: async (user) => {
@@ -222,6 +182,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     sequelize,
+    paranoid: true,
     modelName: 'User',
   });
 
