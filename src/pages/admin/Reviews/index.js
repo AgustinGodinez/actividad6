@@ -1,6 +1,6 @@
+import React from 'react'
 import { CarouselComponent } from '@/components/CarouselComponent'
 import Layout from '@/components/layout'
-import React from 'react'
 
 export default function Index  ()  {
   return (

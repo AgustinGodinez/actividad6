@@ -2,9 +2,7 @@
 import React, { useState } from 'react';
 import { Col, Container, Image, Row } from 'react-bootstrap';
 import ItemsCarousel from 'react-items-carousel';
-import Carousel from 'react-bootstrap/Carousel';
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from 'react-icons/bs';
-import { textAlign } from '@mui/system';
 
 export const CarouselComponent = ({categorias}) => {
 
