@@ -19,6 +19,7 @@ import Offcanvas from 'react-bootstrap/Offcanvas'
 import Link from 'next/link'
 import { AiOutlineShopping } from "react-icons/ai"
 import OpcionesMenu from '@/components/menuItems'
+import { CarouselComponent } from '@/components/CarouselComponent'
 
 const categorias = [
   { id: 1,name: "Pastas", src: "categorias/pasta.jpg", ruta: "" },
@@ -136,18 +137,7 @@ export default function Home() {
 
       { /*<Modalcards/>*/}
       <h1 className='title mt-5 ms-5' > Categorías Top</h1>
-  
-      <Stack direction="horizontal" gap={3} className="mx-sm-5">
-          { categorias.map( (categoria) => (
-                <Card key={categoria.id} href={categoria.ruta} style={{ width: '18rem', height:"205px", marginTop:"20px", marginBottom:"20px"}}>
-                  <Card.Img variant="top" src={categoria.src} />                  <Card.Body>
-                    <Card.Title>
-                      {categoria.name}
-                    </Card.Title>
-                  </Card.Body>
-                </Card>
-          ))}
-      </Stack>
+      <CarouselComponent categorias={categorias}/>
       {/* Listar Productos
       <Container>
         <Row>

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 
 import React, { useState, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
@@ -13,6 +14,7 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Image from 'react-bootstrap/Image'
 import TableCategory from '../../../components/admin/TableCategory';
+import { uploadfile } from '@/firebase/config';
 
 
 export default function Products() {
@@ -21,13 +23,12 @@ export default function Products() {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const [datos, setDatos] = React.useState({
-        id: Math.random(),
-        name: '',
-        src: '',
-        ruta: '',
-        activo: false,
-    })
+    const [imagePrev, setImagePrev] = useState()
+    const [datosFile, setDatosFile] = useState(null)
+    const [nameFile, setNameFile] = useState(null)
+    const [checked, setChecked] = React.useState();
+    const [imagenNueva, setImagenNueva] = useState()
+
     const [categorias, setCategorias] = useState([
         { id: 233, name: "Pastas", src: "/categorias/pasta.jpg", ruta: "", activo: true },
         { id: 2321232, name: "Mexicana", src: "/categorias/Mexicana.jpg", ruta: "mexicana", activo: true },
@@ -37,26 +38,56 @@ export default function Products() {
         { id: 7895543, name: "Tacos", src: "/categorias/tacos.jpg", ruta: "", activo: true }
     ]);
 
-    const handleInputChange = (event) => {
+    const [datos, setDatos] = React.useState({
+        id: Math.random(),
+        name: '',
+        src: '',
+        ruta: '',
+        activo: checked,
+    })
+    const handleInputChange = async (event) => {
+        setChecked(event.target.checked)
         setDatos({
             ...datos,
-            [event.target.name]: event.target.value
+            [event.target.name]: event.target.value,
+            activo: checked
         })
+        if (event.target.files) {
+            changeImage(event)
+            setNameFile(event.target.files[0].name);
+            setDatosFile(event.target.files[0])
+        }
+        /* esta parte obtiene la url de la imagen ingresada */
+        const result = await uploadfile(datosFile, nameFile)
+        /* almacenamos la url en un usestate */
+        setImagenNueva(result);
     }
 
+    const enviarDatos = (e) => {
+        e.preventDefault()
+        const categoriasCopy = [...categorias];
+        categoriasCopy.push(datos)
+        setCategorias([...categoriasCopy])
+        console.log(categorias);
+        handleClose()
+    }
     const handleDelete = (index) => {
         const categoriasCopy = [...categorias];
         categoriasCopy.splice(index, 1)
         setCategorias([...categoriasCopy])
     }
 
-    const enviarDatos = (event) => {
-        event.preventDefault()
-        const categoriasCopy = [...categorias];
-        categoriasCopy.push(datos)
-        setCategorias([...categoriasCopy])
-        handleClose()
+    const changeImage = (e) => {
+        const reader = new FileReader();
+        if (e.target.files[0]) {
+            reader.readAsDataURL(e.target.files[0]);
+            reader.onload = e => {
+                e.preventDefault();
+                setImagePrev(e.target.result)
+            }
+        }
     }
+
 
     return (
         <>
@@ -117,39 +148,48 @@ export default function Products() {
                 <Modal.Header closeButton>
                     <Modal.Title>Agregar Categoria </Modal.Title>
                 </Modal.Header>
-                <Modal.Body  className=' text-center' >
-                    <Row className='mb-4'>
+                <Form onSubmit={enviarDatos}>
 
-                        <Col>
-                            <FloatingLabel label="nombre de la categoria" >
-                                <Form.Control type="text" name="name" value={categorias.name} style={{ height: '50px', maxWidth: '300px', minWidth: '100px' }} onChange={handleInputChange} />
-                            </FloatingLabel>
-                        </Col>
-                    </Row>
-                    <Row className='mb-3'>
-                        <Col>
-                            <Form.Control type="file" name='src' size="sm" style={{ maxWidth: '400px', minWidth: '400px' }} onChange={handleInputChange} />
-                        </Col>
-                    </Row>
-                    <Row className='mb-3'>
-                        <Col>
-                            <Form.Check
-                                type="switch"
-                                id="custom-switch"
-                                name='activo'
-                                defaultChecked={categorias.activo}
-                                onChange={handleInputChange}
-                            />
-                        </Col>
-                    </Row>
+                    <Modal.Body  >
+                        <Row className='mb-4'>
+                            <Col>
+                                <FloatingLabel label="nombre de la categoria" >
+                                    <Form.Control type="text" name="name" value={categorias.name} style={{ height: '50px', maxWidth: '300px', minWidth: '100px' }} onChange={handleInputChange} />
+                                </FloatingLabel>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col className='col-8'>
+                                <Form.Control type="file" id='file-2' name="src" className="inputfile inputfile-2" onChange={handleInputChange} />
+                                <Form.Label htmlFor="file-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="iborrainputfile" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"></path></svg>
+                                    <span className="iborrainputfile">Seleccionar archivo</span>
+                                </Form.Label>
+                            </Col>
+                            <Col className='col-4'>
+                                <Image src={imagePrev} style={{ width: '100px', height: '100px', objectFit: 'cover' }}></Image>
+                            </Col>
+                        </Row>
+                        <Row className='mb-3'>
+                            <Col>
+                                <Form.Label >Activa o Desactva el catalgo</Form.Label>
 
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Cancelar
-                    </Button>
-                    <Button variant="success" onClick={enviarDatos}>Guardar</Button>
-                </Modal.Footer>
+                                <Form.Check
+                                    type="switch"
+                                    name='activo'
+                                    defaultChecked={checked}
+                                    onClick={handleInputChange}
+                                />
+                            </Col>
+                        </Row>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Cancelar
+                        </Button>
+                        <Button variant="success" type='submit'>Guardar</Button>
+                    </Modal.Footer>
+                </Form>
             </Modal>
         </>
     )
