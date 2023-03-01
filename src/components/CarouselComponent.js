@@ -17,8 +17,8 @@ export const CarouselComponent = ({categorias}) => {
                     activeItemIndex={activeItemIndex}
                     numberOfCards={3}
                     gutter={20}
-                    leftChevron={<BsFillArrowLeftCircleFill style={{ fontSize: '50px' }}></BsFillArrowLeftCircleFill>}
-                    rightChevron={<BsFillArrowRightCircleFill style={{ fontSize: '50px' }}></BsFillArrowRightCircleFill>}
+                    leftChevron={<BsFillArrowLeftCircleFill style={{color:'#ff8a84' , fontSize: '50px' }}></BsFillArrowLeftCircleFill>}
+                    rightChevron={<BsFillArrowRightCircleFill style={{color:'#ff8a84' , fontSize: '50px' }}></BsFillArrowRightCircleFill>}
                     outsideChevron
                     chevronWidth={chevronWidth}
                 >
