@@ -3,8 +3,18 @@ import React, { useState } from 'react';
 import { Col, Container, Image, Row } from 'react-bootstrap';
 import ItemsCarousel from 'react-items-carousel';
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from 'react-icons/bs';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 export const CarouselComponent = ({ categorias }) => {
+    const [newItem, setNewItem] = useState({})
+
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = (e, item) => {
+        setNewItem(item)
+        setShow(true)
+    }
 
     const [activeItemIndex, setActiveItemIndex] = useState(0);
     const chevronWidth = 40;
@@ -27,7 +37,7 @@ export const CarouselComponent = ({ categorias }) => {
                         <div key={index} style={{ height: 200, background: '#ffffff', objectFit: 'cover' }}>
                             <Row>
                                 <Col>
-                                    <Image src={item.src} style={{ width: '14rem', height: "200px" }} />
+                                    <Image src={item.src} style={{ width: '14rem', height: "200px" }} onClick={e => handleShow(e, item)} />
                                 </Col>
                                 <Col>
                                     <div >
@@ -36,8 +46,28 @@ export const CarouselComponent = ({ categorias }) => {
                                 </Col>
                             </Row>
                         </div>
-
                     ])}
+                    <Modal
+                        show={show}
+                        onHide={handleClose}
+                        centered
+                    >
+                        <Modal.Header closeButton>
+                            <Modal.Title>Categoria elegida</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Row>
+                                <Col>
+                                    <Image src={newItem.src} style={{ width: '14rem', height: "200px" }} />
+                                </Col>
+                                <Col>
+                                    <div >
+                                        <h5 style={{ lineHeight: '180px', textAlign: 'center' }}>{newItem.name}</h5>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </Modal.Body>
+                    </Modal>
                 </ItemsCarousel>
             </Row>
         </Container>
