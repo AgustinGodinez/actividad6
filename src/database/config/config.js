@@ -1,10 +1,10 @@
 module.exports = {
   development: {
-    username: PROD_DB_USERNAME,
-    password: PROD_DB_PASSWORD,
-    database: PROD_DB_DATABASE,
-    host: PROD_DB_HOST,
-    dialect: PROD_DB_DIALECT
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
+    host: process.env.DB_HOST,
+    dialect: process.env.DB_DIALECT
   },
   test: {
     username: 'root',

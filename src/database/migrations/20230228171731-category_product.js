@@ -26,14 +26,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       updatedAt: {
-        allowNull: true,
         type: Sequelize.DATE
       },
       deleted_by:{
         type: Sequelize.INTEGER
       },
       deletedAt: {
-        allowNull: true,
         type: Sequelize.DATE
       }
     });

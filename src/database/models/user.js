@@ -118,10 +118,6 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: {
           msg: 'Password es un valor requerido'
         },
-        is: {
-          arg: ["/^[0-9a-f]{64}$/i"],
-          msg: 'El Password no cumple las caracteristicas de seguridad'
-        },
         max: {
           arg: 64,
           msg: 'Password solo se permite 64 caracteres'
@@ -158,7 +154,12 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 1
     },
     created_by:{
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
+      validate: {
+        notEmpty: {
+          msg: 'El nombre es un valor requerido'
+        }
+      }
     },
     updated_by:{
       type: DataTypes.INTEGER
@@ -174,7 +175,7 @@ module.exports = (sequelize, DataTypes) => {
           user.password = bcrypt.hashSync(user.password, salt);
         }
        },
-       beforeUpdate:async (user) => {
+      beforeUpdate:async (user) => {
         if (user.password) {
           const salt = bcrypt.genSaltSync(10, 'a');
           user.password = bcrypt.hashSync(user.password, salt);

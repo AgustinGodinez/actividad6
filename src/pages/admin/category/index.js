@@ -1,32 +1,33 @@
 /* eslint-disable jsx-a11y/alt-text */
 
-import React, { useState, useEffect } from 'react';
-import Container from 'react-bootstrap/Container';
-import { FloatingLabel, Modal, Stack } from 'react-bootstrap';
-import Card from 'react-bootstrap/Card';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Layout from '../../../components/layout'
-import Button from 'react-bootstrap/Button';
-import { AiOutlineDelete, AiOutlineEdit, AiOutlineEye, AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
-import Table from 'react-bootstrap/Table';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
+import React, { useState, useEffect } from 'react'
+import Container from 'react-bootstrap/Container'
+import { FloatingLabel, Modal, Stack } from 'react-bootstrap'
+import Card from 'react-bootstrap/Card'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Button from 'react-bootstrap/Button'
+import { AiOutlineDelete, AiOutlineEdit, AiOutlineEye, AiOutlinePlus, AiOutlineSearch } from "react-icons/ai"
+import Table from 'react-bootstrap/Table'
+import Form from 'react-bootstrap/Form'
+import InputGroup from 'react-bootstrap/InputGroup'
 import Image from 'react-bootstrap/Image'
-import TableCategory from '../../../components/admin/TableCategory';
-import { uploadfile } from '@/firebase/config';
+import TableCategory from '../../../components/admin/TableCategory'
+import { uploadfile } from '@/firebase/config'
+import { useSession } from "next-auth/react"
+import { useRouter } from 'next/router'
 
 
-export default function Products() {
-    const [show, setShow] = useState(false);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+export default function Categories() {
+    const [show, setShow] = useState(false)
+    const handleClose = () => setShow(false)
+    const handleShow = () => setShow(true)
+    const router = useRouter()
 
     const [imagePrev, setImagePrev] = useState()
     const [datosFile, setDatosFile] = useState(null)
     const [nameFile, setNameFile] = useState(null)
-    const [checked, setChecked] = React.useState();
+    const [checked, setChecked] = React.useState()
     const [imagenNueva, setImagenNueva] = useState()
 
     const [categorias, setCategorias] = useState([
@@ -36,7 +37,7 @@ export default function Products() {
         { id: 6432, name: "Saludable", src: "/categorias/Saludable.jpg", ruta: "", activo: true },
         { id: 42325, name: "Hanburguesas", src: "/categorias/Hamburguesa.jpg", ruta: "", activo: true },
         { id: 7895543, name: "Tacos", src: "/categorias/tacos.jpg", ruta: "", activo: true }
-    ]);
+    ])
 
     const [datos, setDatos] = React.useState({
         id: Math.random(),
@@ -54,41 +55,50 @@ export default function Products() {
         })
         if (event.target.files) {
             changeImage(event)
-            setNameFile(event.target.files[0].name);
+            setNameFile(event.target.files[0].name)
             setDatosFile(event.target.files[0])
         }
         /* esta parte obtiene la url de la imagen ingresada */
         const result = await uploadfile(datosFile, nameFile)
         /* almacenamos la url en un usestate */
-        console.log(result);
-        setImagenNueva(result);
+        console.log(result)
+        setImagenNueva(result)
     }
 
     const enviarDatos = (e) => {
         e.preventDefault()
-        const categoriasCopy = [...categorias];
+        const categoriasCopy = [...categorias]
         categoriasCopy.push(datos)
         setCategorias([...categoriasCopy])
-        console.log(categorias);
+        console.log(categorias)
         handleClose()
     }
     const handleDelete = (index) => {
-        const categoriasCopy = [...categorias];
+        const categoriasCopy = [...categorias]
         categoriasCopy.splice(index, 1)
         setCategorias([...categoriasCopy])
     }
 
     const changeImage = (e) => {
-        const reader = new FileReader();
+        const reader = new FileReader()
         if (e.target.files[0]) {
-            reader.readAsDataURL(e.target.files[0]);
+            reader.readAsDataURL(e.target.files[0])
             reader.onload = e => {
-                e.preventDefault();
+                e.preventDefault()
                 setImagePrev(e.target.result)
             }
         }
     }
 
+    /** Validando usuario con sesion iniciada */
+    const { data: session, status } = useSession()
+    if (status === "loading") {
+        return null
+    }
+    
+    if (session === null) {
+        return router.push('/api/auth/signin')
+    }
 
     return (
         <>
@@ -196,9 +206,4 @@ export default function Products() {
     )
 }
 
-
-Products.getLayout = function getLayout(page) {
-    return (
-        <Layout>{page}</Layout>
-    )
-}
+Categories.auth = true

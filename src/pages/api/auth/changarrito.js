@@ -1,6 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
 import db from "@/database/models";
+const Sequelize = require('sequelize');
+const { fn, col } = db.User.sequelize;
 import bcrypt from 'bcrypt';
 
 export default function handler(req, res) {
@@ -20,21 +22,26 @@ export default function handler(req, res) {
 const login = async(req, res) => {
     try {
         const user = await db.User.findOne({
+            attributes: [
+               'id', ['nombre', 'name'], 'email', 'celular', ['rol_id','rol'],['imagen_url', 'image'], 'fecha_nacimiento', 'password'],
             where: {
                 email: req.body.email 
             }
-        });
-        
+        },{ raw: true });
         if (user  === null)  {
-            res.status(404).json({authenticated: false, message:"credenciales incorrectas, validar usuario y/o password"});
+            res.status(401).end();
+            return
+            // json({authenticated: false, message:"credenciales incorrectas, validar usuario y/o password"});
         }else{
-            console.log("Autenticando");
             if ( bcrypt.compareSync(req.body.password,user.password)) {
                 console.log(`user: ${user.email} - acceso: ${Date.now()}`);
-                res.status(200).json({authenticated: true, user});
+                user.password = "";
+                return res.status(200).json(user);
             } else {
                 console.log(`user: ${user.email} - acceso denegado`);
-                res.status(404).json({authenticated: false, message:"credenciales incorrectas, validar usuario y/o password"});
+                res.status(401).end();
+                return
+                //.json({authenticated: false, message:"credenciales incorrectas, validar usuario y/o password"});
             }
         }
 
@@ -53,18 +60,17 @@ const updatePassword = async(req, res) => {
         });
 
         if (user != null) {
-            let us  = await db.User.update({...req.body},
-                { fields: ['nombre','apellido_paterno','apellido_materno',
-                'curp', 'fecha_nacimiento', 'email', 'password', 'calle', 'num_ext', 'num_int', 'codigo_postal', 
-                'celular', 'estado', 'ciudad'],
+            let us  = await db.User.update({password: req.body.password, updated_by: req.body.id},
+                { fields: ['password', 'updated_by'],
                 where: {
                     id: user.id
-                }});
+                },
+                individualHooks: true,
+            });
 
                 // enviamos la respuesta
                 res.status(200).json({
                     update: true,
-                    us,
                     message: "Password actualizado correctamente."
                 });
         } else {
@@ -76,7 +82,7 @@ const updatePassword = async(req, res) => {
     } catch (error) {
         res.status(400).json({
             error: true,
-            message: `Ocurrio un error al procesar su solicitud ${error.message}}`
+            message: `Ocurrio un error al procesar su solicitud ${error.message}`
         })
     }
 }

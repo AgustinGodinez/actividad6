@@ -13,12 +13,12 @@ import { AiOutlineCheckCircle } from 'react-icons/ai'
 import { MdOutlineCancel } from 'react-icons/md'
 import Toast from 'react-bootstrap/Toast'
 import ToastContainer from 'react-bootstrap/ToastContainer'
-import apiClient from '@/apiClient'
 import Image from 'react-bootstrap/Image'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import { useRouter } from 'next/router'
 import Layout from '../components/login/_layout'
+import { useAuth } from '@/hooks/useAuth'
 
 
 export default function Login() {
@@ -26,24 +26,19 @@ export default function Login() {
     const [enviare, setEnviare] = useState(false)
     const { register, handleSubmit, watch, formState: { errors } } = useForm()
     const [show, setShow] = useState(false)
-    const [messageError, setMessageError] = useState("")
+    const [messageNoti, setmessageNoti] = useState("")
     const router = useRouter()
+    const auth = useAuth()
 
     const getUsuarioForm = (data) => {
-        // console.log("Data: " + JSON.stringify(data))
-        console.log("validando credenciales")
-        apiClient.post('/authenticate',data)
-        .then(response =>{
-            console.log(response.data)
-            setShow(true)
-            setMessageError(`Bienvenido: ${response.data.user.nombre}`)
+        auth.signIn(data.email,data.password).then(() => {
             router.push('/')
-        })
-        .catch(error =>{
-            setShow(true)
-            if(error.response != null){
-                setMessageError(error.response.data.message)
+        }).catch(error =>{
+            if(error) {
+                setShow(true)
+                setmessageNoti(error?.response?.data?.message)
             }
+            // console.log(error.response.data.message)
         })
     }
 
@@ -79,8 +74,8 @@ export default function Login() {
                     </InputGroup>
                     {errors.password?.type === 'required' && <span style={{ color: 'red' }}>El campo password es requerido</span>}
                     {errors.password?.type === 'minLength' && <span style={{ color: 'red' }}>El campo password es minimo 8 caracteres</span>}
-                    {errors.password?.type === 'maxLength' && <span style={{ color: 'red' }}>El campo password es maximo 10 caracteres</span>}
-                    {errors.password?.type === 'pattern' && <span style={{ color: 'red' }}>la contraseña es invalidad por caracteres especiales</span>}
+                    {errors.password?.type === 'maxLength' && <span style={{ color: 'red' }}>El campo password es maximo 30 caracteres</span>}
+                    {errors.password?.type === 'pattern' && <span style={{ color: 'red' }}>El Password debe contener mínimo ocho caracteres, al menos una letra mayúscula, una letra minúscula, un número y un carácter especial</span>}
 
                     <InputGroup className="mb-5 mt-5" style={{ borderBottom: '5px solid rgba(255, 23, 68, 0.71)' }} >
 
@@ -103,8 +98,8 @@ export default function Login() {
                         <Form.Control style={{ backgroundColor: 'rgba(217, 217, 217, 0.65)', borderradius: '10px 10px 0px 0px', height: '80px', color: '#000000', fontSize: '32px', textTransform: 'capitalize', fontWeight: '400', color: 'dark' }} className="text-center" type="password" placeholder="Contraseña" {...register("password", {
                             required: true,
                             minLength: 8,
-                            maxLength: 10,
-                            pattern: /^[A-Za-z0-9!?-]+$/,
+                            maxLength: 30,
+                            pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}/,
                         })} />
                     </InputGroup>
 
@@ -128,7 +123,7 @@ export default function Login() {
             <Row>
                 <Col xs={6}>
                     <ToastContainer className="p-3" position="middle-center">
-                        <Toast onClose={() => setShow(false)} show={show} delay={3000} autohide bg="Danger" >
+                        <Toast onClose={() => setShow(false)} show={show} delay={6000} autohide bg="Danger" >
                         <Toast.Header>
                             <Image
                             src="changarrito.png"
@@ -139,7 +134,7 @@ export default function Login() {
                             <strong className="me-auto"> Changarrito</strong>
                             <small>just now</small>
                         </Toast.Header>
-                        <Toast.Body>{messageError}</Toast.Body>
+                        <Toast.Body>{messageNoti}</Toast.Body>
                         </Toast>
                     </ToastContainer>
                 </Col>

@@ -126,7 +126,7 @@ const updateUser = async(req, res) => {
         
         res.status(400).json({
             error: true,
-            message: `Ocurrio un error al procesar su solicitud ${error.message}}`,
+            message: `Ocurrio un error al procesar su solicitud ${error.message}`,
             errors
         })
     }

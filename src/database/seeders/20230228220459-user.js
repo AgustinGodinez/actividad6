@@ -11,8 +11,7 @@ module.exports = {
       password: 'admin2023',
       rol_id: 3,
       created_by: 1,
-      createdAt: new Date(),
-      updatedAt: new Date()
+      createdAt: new Date()
     }]);
   },
 

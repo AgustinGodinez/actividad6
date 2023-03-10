@@ -67,14 +67,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       updatedAt: {
-        allowNull: false,
         type: Sequelize.DATE
       },
       deleted_by: {
         type: Sequelize.INTEGER
       },
       deletedAt: {
-        allowNull: false,
         type: Sequelize.DATE
       }
     });
