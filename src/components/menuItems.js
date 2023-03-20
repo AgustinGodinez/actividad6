@@ -36,7 +36,7 @@ export default function OpcionesMenu() {
             <Offcanvas.Body>
             <Nav className="justify-content-end flex-grow-1 pe-3">
                 <Link href="login" className='MenuItem' passHref legacyBehavior>
-                <span>Login</span>
+                <Nav.Link>Login</Nav.Link>
                 </Link>
                 <Link href={`/admin/user/${1}`} className='MenuItem' passHref legacyBehavior>
                 <Nav.Link>Perfil</Nav.Link>
