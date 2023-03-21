@@ -6,6 +6,7 @@ import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from 'react-ico
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
+
 export const CarouselComponent = ({ categorias }) => {
     const [newItem, setNewItem] = useState({})
 

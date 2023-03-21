@@ -2,7 +2,7 @@
 
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useEffect } from 'react'
-import { Button, Form, Stack } from 'react-bootstrap'
+import { Button, Container, Form, Navbar, Stack } from 'react-bootstrap'
 import InputGroup from 'react-bootstrap/InputGroup'
 import { HiUserCircle } from 'react-icons/hi'
 import { RiLockPasswordFill } from 'react-icons/ri'
@@ -18,8 +18,10 @@ import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import { useRouter } from 'next/router'
 import Layout from '../components/login/_layout'
-import { useAuth } from '@/hooks/useAuth'
+import OpcionesMenu from '@/components/menuItems'
+import { FaHamburger } from 'react-icons/fa'
 
+const expand = "true"
 
 export default function Login() {
 
@@ -43,10 +45,41 @@ export default function Login() {
     }
 
     return (
-        
+
         <div>
-            
-            <div className='container mt-5'>
+            <Navbar expand={expand} id="Menu" fixed="top">
+                <Container fluid>
+                    <Container>
+                        <Row>
+                            <Col xs={6}>
+                                <Link href="/">
+                                    <Navbar.Brand>
+                                        <Image src="changarrito.png" alt="Logo" width="60" height="60" style={{ borderRadius: '50%' }} />
+                                    </Navbar.Brand>
+                                </Link>
+                            </Col>
+                            <Col className='MenuItemAlign'>
+                                <Link href="/" className='MenuItem'>
+                                    Inicio
+                                </Link>
+                            </Col>
+                            <Col className='MenuItemAlign'>
+                                <Link href="about" className='MenuItem' style={{ textAlign: 'center' }}>
+                                    Nosotros
+                                </Link>
+                            </Col>
+                            <Col className='MenuItemAlign'>
+                                <Link href="contact" className='MenuItem'>
+                                    Contacto
+                                </Link>
+                            </Col>
+                        </Row>
+                    </Container>
+                </Container>
+            </Navbar>
+
+
+            <div className='container' style={{ marginTop: '8%' }}>
                 <Form onSubmit={handleSubmit(getUsuarioForm)}>
                     {errors.email?.type === 'required' && <span style={{ color: 'red' }}>El campo email es requerido</span>}
                     {errors.email?.type === 'pattern' && <span style={{ color: 'red' }}>El campo email es invalido</span>}
@@ -106,12 +139,9 @@ export default function Login() {
                     <Stack direction="horizontal" gap={1}>
                         <div className='title-card'>
                             <h1 className="title"><Link href="/register">Regístrate aquí</Link></h1>
-                            <h1 className="title">Olvidaste tu contraseña?</h1>
+                            <h1 className="title"><Link href="/resetPass" >Olvidaste tu contraseña?</Link ></h1>
                         </div>
                         <div className=' ms-auto'>
-                            <Button className="title" href="/" variant='person1' style={{ borderradius: '18px', color: '#FFFFFF', fontWeight: 'bolder', fontSize: '19px', padding: '15px', width: '200px' }}>
-                                Entrar
-                            </Button>
                         </div>
                     </Stack>
                     <Button className="title mb-5 boton" variant='primary' type="submit" onClick={e => setEnviare(true)}>
@@ -120,27 +150,27 @@ export default function Login() {
                 </Form>
             </div>
             <>
-            <Row>
-                <Col xs={6}>
-                    <ToastContainer className="p-3" position="middle-center">
-                        <Toast onClose={() => setShow(false)} show={show} delay={6000} autohide bg="Danger" >
-                        <Toast.Header>
-                            <Image
-                            src="changarrito.png"
-                            className="rounded me-2"
-                            alt=""
-                            width="20" height="20"
-                            />
-                            <strong className="me-auto"> Changarrito</strong>
-                            <small>just now</small>
-                        </Toast.Header>
-                        <Toast.Body>{messageNoti}</Toast.Body>
-                        </Toast>
-                    </ToastContainer>
-                </Col>
-            </Row>
+                <Row>
+                    <Col xs={6}>
+                        <ToastContainer className="p-3" position="middle-center">
+                            <Toast onClose={() => setShow(false)} show={show} delay={3000} autohide bg="Danger" >
+                                <Toast.Header>
+                                    <Image
+                                        src="changarrito.png"
+                                        className="rounded me-2"
+                                        alt=""
+                                        width="20" height="20"
+                                    />
+                                    <strong className="me-auto"> Changarrito</strong>
+                                    <small>just now</small>
+                                </Toast.Header>
+                                <Toast.Body>{messageError}</Toast.Body>
+                            </Toast>
+                        </ToastContainer>
+                    </Col>
+                </Row>
             </>
-        </div>
+        </div >
     )
 }
 
