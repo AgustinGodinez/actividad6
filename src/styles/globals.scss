@@ -20,7 +20,7 @@ $theme-colors: (
     z-index: -1;
 }
 
-.inputfile + label {
+.inputfile+label {
     max-width: 80%;
     font-size: 1.25rem;
     font-weight: 700;
@@ -32,7 +32,7 @@ $theme-colors: (
     padding: 0.625rem 1.25rem;
 }
 
-.inputfile + label svg {
+.inputfile+label svg {
     width: 1em;
     height: 1em;
     vertical-align: middle;
@@ -42,67 +42,75 @@ $theme-colors: (
 }
 
 .iborrainputfile {
-	font-size:16px; 
-	font-weight:normal;
-	font-family: 'Lato';
+    font-size: 16px;
+    font-weight: normal;
+    font-family: 'Lato';
 }
-.inputfile-2 + label {
+
+.inputfile-2+label {
     color: #9fd9b3;
     border: 2px solid currentColor;
 }
 
-.inputfile-2:focus + label,
-.inputfile-2.has-focus + label,
-.inputfile-2 + label:hover {
+.inputfile-2:focus+label,
+.inputfile-2.has-focus+label,
+.inputfile-2+label:hover {
     color: #9fd9b3;
 }
 
 
-#Menu{
+#Menu {
     background-color: rgba(241, 231, 231, 88%);
 }
-.MenuAll{
+
+.MenuAll {
     background-color: black;
     color: white;
 }
-.btnAdd{
+
+.btnAdd {
     color: white !important;
 }
-.centerContent{
+
+.centerContent {
     text-align: right;
 }
-.MenuItemAllAlign{
+
+.MenuItemAllAlign {
     padding: 10px;
 }
 
-.MenuItemAll{
+.MenuItemAll {
     text-decoration: none;
     color: white;
     font-weight: 600;
 }
-.menuBotton{
+
+.menuBotton {
     background-color: snow !important;
 }
-.iconAction{
+
+.iconAction {
     font-size: 1.5rem;
 }
 
 
-.MenuItem{
+.MenuItem {
     text-decoration: none;
     color: black;
     font-weight: 600;
 }
 
-.MenuItem:hover{
+.MenuItem:hover {
     text-decoration: none;
     color: #fe6763;
     font-weight: 700;
 }
 
-.MenuItemAlign{
+.MenuItemAlign {
     padding: 10px;
 }
+
 #img_home {
     background-image: url("../../public/home.jpg");
     background-color: #cccccc;
@@ -112,13 +120,16 @@ $theme-colors: (
     background-size: cover;
     position: relative;
 }
+
 #home-title {
     margin-top: 30%;
     font-size: 4.5rem;
 }
+
 .borderline {
     border-bottom: 5px solid rgba(255, 23, 68, 0.71)
 }
+
 .labelformme {
     background-color: rgba(217, 217, 217, 0.65);
     border-radius: 10px 10px 0px 0px;
@@ -127,6 +138,7 @@ $theme-colors: (
     font-weight: 400;
     color: darkblue
 }
+
 .boton {
     border-radius: '18px';
     color: #FFFFFF;
@@ -135,5 +147,16 @@ $theme-colors: (
     padding: 15px;
     width: 200px
 }
+
+
+
+
+.bg {
+    background-image: url(../../public/Changarrito.png);
+    background-position: center center;
+    background-size: 100%;
+}
+
+
 
 @import "~bootstrap/scss/bootstrap";

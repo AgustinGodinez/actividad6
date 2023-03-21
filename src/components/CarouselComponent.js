@@ -4,10 +4,15 @@ import { Col, Container, Image, Row } from 'react-bootstrap';
 import ItemsCarousel from 'react-items-carousel';
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from 'react-icons/bs';
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 >>>>>>> 238bef9437c48a1f5e97182c5fe5a5148a8518d8
+=======
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+>>>>>>> 3dc05eac152858ab09265fa63adcaa887c719516
 
 export const CarouselComponent = ({ categorias }) => {
     const [newItem, setNewItem] = useState({})
