@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react'
 import Container from 'react-bootstrap/Container'
 import { FloatingLabel, Modal, Stack } from 'react-bootstrap'
-import Card from 'react-bootstrap/Card'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
@@ -27,9 +26,8 @@ export default function Categories() {
     const [imagePrev, setImagePrev] = useState()
     const [datosFile, setDatosFile] = useState(null)
     const [nameFile, setNameFile] = useState(null)
-    const [checked, setChecked] = React.useState()
+    const [checked, setChecked] = useState()
     const [imagenNueva, setImagenNueva] = useState()
-
     const [categorias, setCategorias] = useState([
         { id: 233, name: "Pastas", src: "/categorias/pasta.jpg", ruta: "", activo: true },
         { id: 2321232, name: "Mexicana", src: "/categorias/Mexicana.jpg", ruta: "mexicana", activo: true },
@@ -39,13 +37,23 @@ export default function Categories() {
         { id: 7895543, name: "Tacos", src: "/categorias/tacos.jpg", ruta: "", activo: true }
     ])
 
-    const [datos, setDatos] = React.useState({
+    const [datos, setDatos] = useState({
         id: Math.random(),
         name: '',
         src: '',
         ruta: '',
         activo: checked,
     })
+
+    const { status } = useSession({
+        required: true,
+        onUnauthenticated() {
+          // The user is not authenticated, handle it here.
+          return router.push('/api/auth/signin')
+        },
+    })
+
+  
     const handleInputChange = async (event) => {
         setChecked(event.target.checked)
         setDatos({
@@ -91,6 +99,7 @@ export default function Categories() {
     }
 
     /** Validando usuario con sesion iniciada */
+    /*
     const { data: session, status } = useSession()
     if (status === "loading") {
         return null
@@ -99,7 +108,7 @@ export default function Categories() {
     if (session === null) {
         return router.push('/api/auth/signin')
     }
-
+    */
     return (
         <>
             <Container className="mx-md-5 my-md-5">

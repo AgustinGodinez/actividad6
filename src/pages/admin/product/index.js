@@ -19,6 +19,7 @@ export default function Products() {
     const router = useRouter()
     /** Validando usuario con sesion iniciada */
     const { data: session, status } = useSession()
+    /*
     if (status === "loading") {
         return null
     }
@@ -26,6 +27,7 @@ export default function Products() {
     if (session === null) {
         return router.push('/api/auth/signin')
     }
+    */
   return (
     <>
         <Container className="mx-md-5 my-md-5">
@@ -124,9 +126,4 @@ export default function Products() {
   )
 }
 
-
-Products.getLayout = function getLayout(page) {
-  return (
-      <Layout>{page}</Layout>
-  )
-}
+Products.auth = true

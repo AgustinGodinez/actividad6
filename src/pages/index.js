@@ -41,22 +41,8 @@ export default function Home() {
     setValidated(true)
   }
 
-
-<<<<<<< HEAD
-  useEffect( () =>{
-    /*
-    //Recuperar los datos del Api
-    apiClient.get('/products')
-    .then(response =>{
-      // console.log(response.data)
-      setProducts(response.data)
-    })
-    .catch(error =>{
-      console.error(error)
-    })*/
-  },[])
-=======
   useEffect(() => {
+    /*
     //Recuperar los datos del Api
     apiClient.get('/products')
       .then(response => {
@@ -66,8 +52,8 @@ export default function Home() {
       .catch(error => {
         console.error(error)
       })
+    */
   }, [])
->>>>>>> main
 
   /*const handleFindProduct = (data) =>{
     setBusqueda(this.busqueda)
@@ -84,42 +70,6 @@ export default function Home() {
   return (
     <>
       <Container fluid id='img_home'>
-<<<<<<< HEAD
-=======
-        <Navbar expand={expand} id="Menu" fixed="top">
-          <Container fluid>
-            <Container>
-              <Row>
-                <Col xs={6}>
-                  <Link href="/">
-                    <Navbar.Brand>
-                      <Image src="changarrito.png" alt="Logo" width="60" height="60" style={{ borderRadius: '50%' }} />
-                    </Navbar.Brand>
-                  </Link>
-                </Col>
-                <Col className='MenuItemAlign'>
-                  <Link href="/" className='MenuItem'>
-                    Inicio
-                  </Link>
-                </Col>
-                <Col className='MenuItemAlign'>
-                  <Link href="about" className='MenuItem' style={{ textAlign: 'center' }}>
-                    Nosotros
-                  </Link>
-                </Col>
-                <Col className='MenuItemAlign'>
-                  <Link href="contact" className='MenuItem'>
-                    Contacto
-                  </Link>
-                </Col>
-              </Row>
-            </Container>
-
-            <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
-            <OpcionesMenu />
-          </Container>
-        </Navbar>
->>>>>>> main
         <Stack gap={2} className="col-md-6 mx-auto">
           <h1 id='home-title' className="title">
             <span>
@@ -144,13 +94,10 @@ export default function Home() {
         </Stack>
       </Container>
       <h1 className='title mt-5 ms-5' > Categorías Top</h1>
-<<<<<<< HEAD
-      <CarouselComponent categorias={categorias}/>
-=======
       <CarouselComponent categorias={categorias} />
-      <h1 className='title mt-5 ms-5' >Listar Productos</h1>
+        <h1 className='title mt-5 ms-5' >Listar Productos</h1>
       <CarouselCard products={products} ></CarouselCard>
->>>>>>> main
+
       <Container className="mx-md-5 my-md-5">
         <h1 className="title" style={{ marginleft: "48px" }}> Unete A Changarrito</h1>
       </Container>
@@ -228,12 +175,4 @@ export default function Home() {
   )
 }
 
-<<<<<<< HEAD
 Home.auth = false
-=======
-Home.getLayout = function getLayout(page) {
-  return (
-    <Layout>{page}</Layout>
-  )
-}
->>>>>>> main
