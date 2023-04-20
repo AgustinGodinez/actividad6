@@ -11,10 +11,23 @@ import { AiOutlineDelete, AiOutlineEdit,AiOutlineEye, AiOutlinePlus, AiOutlineSe
 import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
+import { useSession } from "next-auth/react"
+import { Router, useRouter } from 'next/router'
 
 
 export default function Products() {
-  
+    const router = useRouter()
+    /** Validando usuario con sesion iniciada */
+    const { data: session, status } = useSession()
+    /*
+    if (status === "loading") {
+        return null
+    }
+    
+    if (session === null) {
+        return router.push('/api/auth/signin')
+    }
+    */
   return (
     <>
         <Container className="mx-md-5 my-md-5">
@@ -113,9 +126,4 @@ export default function Products() {
   )
 }
 
-
-Products.getLayout = function getLayout(page) {
-  return (
-      <Layout>{page}</Layout>
-  )
-}
+Products.auth = true

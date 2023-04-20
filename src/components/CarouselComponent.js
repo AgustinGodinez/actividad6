@@ -6,6 +6,7 @@ import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from 'react-ico
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
+
 export const CarouselComponent = ({ categorias }) => {
     const [newItem, setNewItem] = useState({})
 
@@ -37,11 +38,11 @@ export const CarouselComponent = ({ categorias }) => {
                         <div key={index} style={{ height: 200, background: '#ffffff', objectFit: 'cover' }}>
                             <Row>
                                 <Col>
-                                    <Image src={item.src} style={{ width: '14rem', height: "200px" }} onClick={e => handleShow(e, item)} />
+                                    <Image src={item.url_image} style={{ width: '14rem', height: "200px" }} onClick={e => handleShow(e, item)} />
                                 </Col>
                                 <Col>
                                     <div >
-                                        <h5 style={{ lineHeight: '180px', textAlign: 'center' }}>{item.name}</h5>
+                                        <h5 style={{ lineHeight: '180px', textAlign: 'center' }}>{item.nombre}</h5>
                                     </div>
                                 </Col>
                             </Row>
@@ -58,11 +59,11 @@ export const CarouselComponent = ({ categorias }) => {
                         <Modal.Body>
                             <Row>
                                 <Col>
-                                    <Image src={newItem.src} style={{ width: '14rem', height: "200px" }} />
+                                    <Image src={newItem.url_image} style={{ width: '14rem', height: "200px" }} />
                                 </Col>
                                 <Col>
                                     <div >
-                                        <h5 style={{ lineHeight: '180px', textAlign: 'center' }}>{newItem.name}</h5>
+                                        <h5 style={{ lineHeight: '180px', textAlign: 'center' }}>{newItem.nombre}</h5>
                                     </div>
                                 </Col>
                             </Row>

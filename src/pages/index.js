@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react'
+import Layout from '@components/home/layout'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import InputGroup from 'react-bootstrap/InputGroup'
@@ -9,33 +10,16 @@ import { Image, Stack } from 'react-bootstrap'
 import Card from 'react-bootstrap/Card'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import apiClient from '@/apiClient'
-import { Modalcards } from '@/components/Modalcards'
-import Layout from '../components/home/layout'
-import Nav from 'react-bootstrap/Nav'
-import Navbar from 'react-bootstrap/Navbar'
-import NavDropdown from 'react-bootstrap/NavDropdown'
-import Offcanvas from 'react-bootstrap/Offcanvas'
-import Link from 'next/link'
-import { AiOutlineShopping } from "react-icons/ai"
-import OpcionesMenu from '@/components/menuItems'
 import { CarouselComponent } from '@/components/CarouselComponent'
-import { CarouselCard } from '@/components/CarouselCard'
-
-const categorias = [
-  { id: 1, name: "Pastas", src: "categorias/pasta.jpg", ruta: "" },
-  { id: 3, name: "Mexicana", src: "categorias/Mexicana.jpg", ruta: "mexicana" },
-  { id: 6, name: "Postres", src: "categorias/postre.jpg", ruta: "" },
-  { id: 7, name: "Saludable", src: "categorias/Saludable.jpg", ruta: "" },
-  { id: 8, name: "Hanburguesas", src: "categorias/Hamburguesa.jpg", ruta: "" },
-  { id: 10, name: "Tacos", src: "categorias/tacos.jpg", ruta: "" }
-]
+import apiClient from '@/apiClient'
+import Navbar from 'react-bootstrap/Navbar'
+import Link from 'next/link'
+import OpcionesMenu from '@components/menuItems'
 
 const expand = "true"
 
-export default function Home() {
-  const [products, setProducts] = useState([])
-
+export default function Home({categorias}) {
+  const [category, setCategory] = useState([])
   const [busqueda, setBusqueda] = useState([])
   const [validated, setValidated] = useState(false)
 
@@ -48,19 +32,6 @@ export default function Home() {
     console.log(form.filtro.value)
     setValidated(true)
   }
-
-
-  useEffect(() => {
-    //Recuperar los datos del Api
-    apiClient.get('/products')
-      .then(response => {
-        // console.log(response.data)
-        setProducts(response.data)
-      })
-      .catch(error => {
-        console.error(error)
-      })
-  }, [])
 
   /*const handleFindProduct = (data) =>{
     setBusqueda(this.busqueda)
@@ -76,38 +47,39 @@ export default function Home() {
 
   return (
     <>
+      
       <Container fluid id='img_home'>
-        <Navbar expand={expand} id="Menu" fixed="top">
+        <Navbar expand={expand} id='Menu'>
           <Container fluid>
             <Container>
-              <Row>
-                <Col xs={6}>
-                  <Link href="/">
-                    <Navbar.Brand>
-                      <Image src="changarrito.png" alt="Logo" width="60" height="60" style={{ borderRadius: '50%' }} />
-                    </Navbar.Brand>
-                  </Link>
-                </Col>
-                <Col className='MenuItemAlign'>
-                  <Link href="/" className='MenuItem'>
-                    Inicio
-                  </Link>
-                </Col>
-                <Col className='MenuItemAlign'>
-                  <Link href="about" className='MenuItem' style={{ textAlign: 'center' }}>
-                    Nosotros
-                  </Link>
-                </Col>
-                <Col className='MenuItemAlign'>
-                  <Link href="contact" className='MenuItem'>
-                    Contacto
-                  </Link>
-                </Col>
-              </Row>
+                  <Row>
+                      <Col xs={6}>
+                          <Link href="/">
+                              <Navbar.Brand>
+                                  <img src="/Changarrito.png" alt="Logo" width="60" height="60" style={{borderRadius: '50%'}} />
+                              </Navbar.Brand>
+                          </Link>
+                      </Col>
+                      <Col className='MenuItemAllAlign'>
+                          <Link href="/" className='MenuItemHome'>
+                              Inicio
+                          </Link>
+                      </Col>
+                      <Col className='MenuItemAllAlign'> 
+                          <Link href="about" className='MenuItemHome' style={{textAlign: 'center'}}>
+                              Nosotros
+                          </Link>
+                      </Col>
+                      <Col className='MenuItemAllAlign'>
+                          <Link href="contact" className='MenuItemHome'>
+                              Contacto
+                          </Link>
+                      </Col>
+                  </Row>
             </Container>
-
-            <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
-            <OpcionesMenu />
+              
+            <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`}  className="menuBotton"/>
+            <OpcionesMenu/>
           </Container>
         </Navbar>
         <Stack gap={2} className="col-md-6 mx-auto">
@@ -133,12 +105,9 @@ export default function Home() {
           </Form>
         </Stack>
       </Container>
-
-      { /*<Modalcards/>*/}
       <h1 className='title mt-5 ms-5' > Categorías Top</h1>
       <CarouselComponent categorias={categorias} />
-      <h1 className='title mt-5 ms-5' >Listar Productos</h1>
-      <CarouselCard products={products} ></CarouselCard>
+
       <Container className="mx-md-5 my-md-5">
         <h1 className="title" style={{ marginleft: "48px" }}> Unete A Changarrito</h1>
       </Container>
@@ -216,8 +185,20 @@ export default function Home() {
   )
 }
 
+export async function getStaticProps(){
+  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/category_product`)
+  // console.log(res)
+  const categorias = await res.json()
+
+  return {
+    props: {
+      categorias,
+    },
+  }
+}
+
 Home.getLayout = function getLayout(page) {
   return (
-    <Layout>{page}</Layout>
+      <Layout>{page}</Layout>
   )
 }

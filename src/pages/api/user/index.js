@@ -33,7 +33,18 @@ const userList = async(req, res) => {
     try {
         //Retornamos todos  los useros
         
-        const users = await db.User.findAll();
+        const users = await db.User.findAll({
+            attributes: [
+                'id', ['nombre', 'name'], 
+                'email', 
+                ['imagen_url', 'image']
+            ],
+            include: [{
+                model: db.Roles,
+                as: 'Rol',
+                attributes: [['nombre', 'role']]
+            }]
+        });
         res.status(200).json(users);
     } catch (error) {
         return res.status(500).send({ error: true, message: `Error al procesar solicitud: ${error.message}` })
@@ -48,7 +59,7 @@ const findUser = async(req, res) => {
         const { filtro } = query;
         console.log(filtro);
 
-        const users = await db.user.findAll({
+        const users = await db.User.findAll({
             where: {
                 [Op.or]: {
                     nombre: { 
@@ -126,7 +137,7 @@ const updateUser = async(req, res) => {
         
         res.status(400).json({
             error: true,
-            message: `Ocurrio un error al procesar su solicitud ${error.message}}`,
+            message: `Ocurrio un error al procesar su solicitud ${error.message}`,
             errors
         })
     }
