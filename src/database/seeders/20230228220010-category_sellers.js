@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('Category_sellers', [{
+    await queryInterface.bulkInsert('category_sellers', [{
       nombre: 'Restaurante',
       createdAt: new Date(),
       created_by: 1,
@@ -76,6 +76,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) { 
-    await queryInterface.bulkDelete('Category_sellers', null, {});
+    await queryInterface.bulkDelete('category_sellers', null, {});
   }
 };

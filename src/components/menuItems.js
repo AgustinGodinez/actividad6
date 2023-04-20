@@ -7,22 +7,12 @@ import Stack from 'react-bootstrap/Stack'
 import Image from 'react-bootstrap/Image'
 import Button from 'react-bootstrap/Button'
 import { useSession, signIn, signOut } from "next-auth/react"
+import Menu from '@components/Nav/opciones'
 
-const menu = [
-{id: 1,path: '/admin/category',name: 'Categorias de Productos'},
-{id: 2, path: '/admin/product', name: 'Lista de Productos'},
-{id: 3, path: '/admin/Orders/', name: 'Pedidos'},
-{id: 4, path: '/admin/Reviews/',name: 'Reviews'},
-{id: 5, path: '/admin/sellers',name: 'Vendedores'},
-{id: 6, path: '/admin/user',name: 'Usuarios'},
-{id: 7, path: '/admin/earnings',name: 'Ventas'}
-]
 const expand = "true"
 
-export default function OpcionesMenu() {
+export default function OpcionesMenu({menu}) {
     const { data: session } = useSession()
-    console.log("Menu")
-    console.log(JSON.stringify(session))
   return (
     <>
         <Navbar.Offcanvas
@@ -49,11 +39,11 @@ export default function OpcionesMenu() {
             <Offcanvas.Body>
             <Nav className="justify-content-end flex-grow-1 pe-3">
                 <Link href={`/admin/user/${1}`} className='MenuItem' passHref legacyBehavior>
-                <Nav.Link>Perfil</Nav.Link>
+                <Nav.Link>Mi Perfil</Nav.Link>
                 </Link>
                 <hr></hr>
                 <NavDropdown.Divider />
-                { menu.map( (item) => (
+                { Menu.map( (item) => (
                 <Link key={item.id} href={item.path} passHref legacyBehavior>
                     <Nav.Link>{item.name}</Nav.Link>
                 </Link>

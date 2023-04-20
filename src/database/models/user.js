@@ -1,5 +1,5 @@
 'use strict';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt'
 
 const {
   Model
@@ -12,7 +12,11 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      User.belongsTo(models.Roles,
+        {
+          as: 'Rol',
+          foreignKey: 'rol_id'
+        })
     }
   }
 
@@ -184,7 +188,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     sequelize,
     paranoid: true,
-    modelName: 'User',
+    modelName: 'users',
   });
 
   return  User;

@@ -1,6 +1,13 @@
-import Navbar from '../menu'
+import OpcionesMenu from '@components/menuItems'
 import Head from 'next/head'
 import Footer from '../footer'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Container from 'react-bootstrap/Container'
+import Navbar from 'react-bootstrap/Navbar'
+import Link from 'next/link'
+
+const expand = 'true'
 
 export default function Layout({ children }) {
   return (

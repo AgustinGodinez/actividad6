@@ -14,6 +14,10 @@ module.exports = {
         type: Sequelize.STRING(150),
         allowNull: false,
       },
+      url_image: {
+        type: Sequelize.STRING(300),
+        allowNull: false,
+      },
       created_by:{
         type: Sequelize.INTEGER,
         allowNull: false,

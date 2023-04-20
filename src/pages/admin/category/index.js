@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Container from 'react-bootstrap/Container'
+import Layout from '@components/layout'
 import { FloatingLabel, Modal, Stack } from 'react-bootstrap'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -12,103 +13,223 @@ import Form from 'react-bootstrap/Form'
 import InputGroup from 'react-bootstrap/InputGroup'
 import Image from 'react-bootstrap/Image'
 import TableCategory from '../../../components/admin/TableCategory'
-import { uploadfile } from '@/firebase/config'
-import { useSession } from "next-auth/react"
-import { useRouter } from 'next/router'
+import { uploadImageAndGetUrl } from '@/firebase/config'
+import Swal from 'sweetalert2'
+import apiClient from '@/apiClient'
 
 
-export default function Categories() {
+export default function Categories({categories}) {
     const [show, setShow] = useState(false)
-    const handleClose = () => setShow(false)
-    const handleShow = () => setShow(true)
-    const router = useRouter()
 
-    const [imagePrev, setImagePrev] = useState()
+    /** Mostrar y Ocultar la modal */
+    const handleClose = () => {
+        setShow(false)
+        setImagePrev()
+        setDatos()
+    }
+    const handleShow = () => {
+        setShow(true)
+    }
+
+    const [imagePrev, setImagePrev] = useState(null) //Preview de imagen
+
     const [datosFile, setDatosFile] = useState(null)
     const [nameFile, setNameFile] = useState(null)
-    const [checked, setChecked] = useState()
-    const [imagenNueva, setImagenNueva] = useState()
-    const [categorias, setCategorias] = useState([
-        { id: 233, name: "Pastas", src: "/categorias/pasta.jpg", ruta: "", activo: true },
-        { id: 2321232, name: "Mexicana", src: "/categorias/Mexicana.jpg", ruta: "mexicana", activo: true },
-        { id: 7656, name: "Postres", src: "/categorias/postre.jpg", ruta: "", activo: false },
-        { id: 6432, name: "Saludable", src: "/categorias/Saludable.jpg", ruta: "", activo: true },
-        { id: 42325, name: "Hanburguesas", src: "/categorias/Hamburguesa.jpg", ruta: "", activo: true },
-        { id: 7895543, name: "Tacos", src: "/categorias/tacos.jpg", ruta: "", activo: true }
-    ])
+    const [checked, setChecked] = useState(true)
+    const [category_id, setID] = useState()
+    const [isLoading, setLoading] = useState(false)
+    const [categorias, setCategorias] = useState(null)
 
-    const [datos, setDatos] = useState({
-        id: Math.random(),
-        name: '',
-        src: '',
-        ruta: '',
-        activo: checked,
-    })
+    const [datos, setDatos] = useState(null)
+    const [busqueda, setBusqueda] = useState('')
 
-    const { status } = useSession({
-        required: true,
-        onUnauthenticated() {
-          // The user is not authenticated, handle it here.
-          return router.push('/api/auth/signin')
-        },
-    })
-
-  
+    //Evento para Previsualizacion de imagen
     const handleInputChange = async (event) => {
-        setChecked(event.target.checked)
-        setDatos({
-            ...datos,
-            [event.target.name]: event.target.value,
-            activo: checked
-        })
         if (event.target.files) {
-            changeImage(event)
-            setNameFile(event.target.files[0].name)
+            const reader = new FileReader()
+            reader.readAsDataURL(event.target.files[0])
+            reader.onload = event => {
+                event.preventDefault()
+                setImagePrev(event.target.result)
+            }
+            setNameFile(event.target.files[0]?.name)
             setDatosFile(event.target.files[0])
         }
-        /* esta parte obtiene la url de la imagen ingresada */
-        const result = await uploadfile(datosFile, nameFile)
-        /* almacenamos la url en un usestate */
-        console.log(result)
-        setImagenNueva(result)
     }
 
-    const enviarDatos = (e) => {
+    // Metodo para guardar los datos de una categoria
+    const enviarDatos = async(e) => {
         e.preventDefault()
-        const categoriasCopy = [...categorias]
-        categoriasCopy.push(datos)
-        setCategorias([...categoriasCopy])
-        console.log(categorias)
-        handleClose()
-    }
-    const handleDelete = (index) => {
-        const categoriasCopy = [...categorias]
-        categoriasCopy.splice(index, 1)
-        setCategorias([...categoriasCopy])
-    }
-
-    const changeImage = (e) => {
-        const reader = new FileReader()
-        if (e.target.files[0]) {
-            reader.readAsDataURL(e.target.files[0])
-            reader.onload = e => {
-                e.preventDefault()
-                setImagePrev(e.target.result)
+        let imageUrl
+        /*Falta validar si es un cambio de imagen reemplazar el anterior*/
+        if(category_id){ // Se trada de un cambio
+            if (imagePrev) {
+                imageUrl = await uploadImageAndGetUrl('categorias',datosFile, nameFile)
             }
+            apiClient.put(`/api/category_product`,{ 'id': category_id, 'nombre':datos,'url_image':imageUrl})
+                .then(response =>{
+                    console.log(response)
+                    let index = array.findIndex(obj => obj.id === category_id)
+                    const categoriasCopy = [...categorias]
+                    categoriasCopy.splice(index, 1)
+                    categoriasCopy.push(response.data.Categorys)
+                    setCategorias([...categoriasCopy])
+                    
+                    Swal.fire({
+                        position: 'center',
+                        title: `Changarrito`,
+                        text: response.data.message,
+                        icon: 'success',
+                        confirmButtonText: 'Aceptar'
+                    })
+                    handleClose()
+                })
+                .catch(error =>{
+                    Swal.fire({
+                        position: 'center',
+                        title: `Changarrito`,
+                        text: `Servicio no disponible, favor de intentar mas tarde.`,
+                        icon: 'error',
+                        confirmButtonText: 'Aceptar'
+                    })
+                })
+        }else{ // Se trata de un nuevo registro
+            if (imagePrev) {
+                imageUrl = await uploadImageAndGetUrl('categorias',datosFile, nameFile)
+            }
+            apiClient.post(`/api/category_product`,{ 'nombre':datos,'url_image':imageUrl})
+                .then(response =>{
+                    console.log(response)
+                    categorias.push(response.data.Categorys)
+                    Swal.fire({
+                        position: 'center',
+                        title: `Changarrito`,
+                        text: response.data.message,
+                        icon: 'success',
+                        confirmButtonText: 'Aceptar'
+                    })
+                    handleClose()
+                })
+                .catch(error =>{
+                    Swal.fire({
+                        position: 'center',
+                        title: `Changarrito`,
+                        text: `Servicio no disponible, favor de intentar mas tarde.`,
+                        icon: 'error',
+                        confirmButtonText: 'Aceptar'
+                    })
+                })
         }
     }
+    // Evento para borrar una categoria
+    const handleDelete = (index) => {
+        Swal.fire({
+            position: 'center',
+            title: `Changarrito`,
+            text: `¿Desea borrar la categoria seleccionada?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Aceptar',
+            cancelButtonText: 'Cancelar',
+        })
+        .then((result) => {
+            if (result.isConfirmed) {
+                apiClient.delete(`/api/category_product?id=${categorias[index].id}`)
+                .then( response=>{
+                    const categoriasCopy = [...categorias]
+                    categoriasCopy.splice(index, 1)
+                    setCategorias([...categoriasCopy])
+                    Swal.fire({
+                        position: 'center',
+                        title: `Changarrito`,
+                        text: response.data.message,
+                        icon: 'success',
+                        confirmButtonText: 'Aceptar'
+                    })
+                })
+                .catch(error =>{
+                    Swal.fire({
+                        position: 'center',
+                        title: `Changarrito`,
+                        text: `Servicio no disponible, favor de intentar mas tarde.`,
+                        icon: 'error',
+                        confirmButtonText: 'Aceptar'
+                    })
+                })
+            }
+        })
+    }
+    // Evento para actualizar una categoria
+    const handleUpdate = (index)  => {
+        setDatos(categorias[index].nombre)
+        setImagePrev(categorias[index].url_image)
+        setID(categorias[index].id)
+        setShow(true)
+    }
+    // Evento para cambiar el estado de la categoria Activa/Inhactiva
+    const handleActive = async (index, val) =>{
+        console.log("ID: "+categorias[index].id)
+        Swal.fire({
+            position: 'center',
+            title: `Changarrito`,
+            text: `¿Desea ${categorias[index].active?`inactivar`:`activar`} la categoria seleccionada?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Aceptar',
+            cancelButtonText: 'Cancelar',
+        })
+        .then((result) => {
+            if (result.isConfirmed) {
+                apiClient.put(`/api/category_product?id=${categorias[index].id}`,{ 'active': val})
+                .then( response=>{
+                    const categoriasCopy = [...categorias]
+                    const cate = categorias[index]
+                    cate.active = val
+                    categoriasCopy.splice(index, 1)
+                    categoriasCopy.push(cate)
+                    setCategorias([...categoriasCopy])
+                    Swal.fire({
+                        position: 'center',
+                        title: `Changarrito`,
+                        text: response.data.message,
+                        icon: 'success',
+                        confirmButtonText: 'Aceptar'
+                    })
+                })
+                .catch(error =>{
+                    Swal.fire({
+                        position: 'center',
+                        title: `Changarrito`,
+                        text: `Servicio no disponible, favor de intentar mas tarde.`,
+                        icon: 'error',
+                        confirmButtonText: 'Aceptar'
+                    })
+                })
+            }
+            
+        })
+    }
+    useEffect(() => {
+        setCategorias(categories)
+    }, [])
 
-    /** Validando usuario con sesion iniciada */
-    /*
-    const { data: session, status } = useSession()
-    if (status === "loading") {
-        return null
+    const handleFind = async (e) =>{
+        setBusqueda(e.target.value)
+        /*
+        if (busqueda.length > 0) {
+            apiClient.get(`/api/category_product?filtro=${busqueda}`)
+            .then(response =>{
+                console.log(response)
+                setCategorias(response)
+            })
+        }else{
+            apiClient.get(`/api/category_product`)
+            .then(response =>{
+                setCategorias(response)
+            })
+        }*/
     }
-    
-    if (session === null) {
-        return router.push('/api/auth/signin')
-    }
-    */
+
     return (
         <>
             <Container className="mx-md-5 my-md-5">
@@ -122,6 +243,8 @@ export default function Categories() {
                                 <Form.Control
                                     placeholder="Buscar categoria"
                                     name="categoria"
+                                    onChange={handleFind}
+                                    value={busqueda}
                                 />
                                 <InputGroup.Text><AiOutlineSearch /></InputGroup.Text>
                             </InputGroup>
@@ -135,6 +258,7 @@ export default function Categories() {
                     </Col>
                 </Row>
             </Container>
+             {/* Tabla de resultados */}
             <Container className='mb-md-5'>
                 <Table striped>
                     <thead>
@@ -147,18 +271,23 @@ export default function Categories() {
                         </tr>
                     </thead>
                     <tbody>
-                        {categorias.map((item, index) => [
-                            <tr key={item.id}>
-                                <TableCategory
-                                    categorias={item}
-                                    index={index}
-                                    onDelete={handleDelete}
-                                />
-                            </tr>
-                        ])}
+                        {categorias  &&
+                            categorias?.map((item, index) => [
+                                <tr key={item.id}>
+                                    <TableCategory
+                                        categorias={item}
+                                        index={index}
+                                        onDelete={handleDelete}
+                                        onUpdate={handleUpdate}
+                                        onActive={handleActive}
+                                    />
+                                </tr>
+                            ])
+                        }
                     </tbody>
                 </Table>
             </Container>
+             {/* Modal para Insertar y/o Actualizar */}
             <Modal
                 show={show}
                 onHide={handleClose}
@@ -166,40 +295,29 @@ export default function Categories() {
                 keyboard={false}
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>Agregar Categoria </Modal.Title>
+                    <Modal.Title>{!category_id? 'Nueva ': 'Modificando '}Categoria </Modal.Title>
                 </Modal.Header>
                 <Form onSubmit={enviarDatos}>
-
                     <Modal.Body  >
                         <Row className='mb-4'>
+                            <input name="id" type="hidden" value={category_id} />
+                        </Row>
+                        <Row className='mb-4'>
                             <Col>
-                                <FloatingLabel label="nombre de la categoria" >
-                                    <Form.Control type="text" name="name" value={categorias.name} style={{ height: '50px', maxWidth: '300px', minWidth: '100px' }} onChange={handleInputChange} />
+                                <FloatingLabel label="Categoria:" >
+                                    <Form.Control type="text" name="nombre" value={datos} onChange={(e) => setDatos(e.target.value)} required/>
                                 </FloatingLabel>
                             </Col>
                         </Row>
                         <Row>
                             <Col className='col-8'>
-                                <Form.Control type="file" id='file-2' name="src" className="inputfile inputfile-2" onChange={handleInputChange} />
-                                <Form.Label htmlFor="file-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="iborrainputfile" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"></path></svg>
-                                    <span className="iborrainputfile">Seleccionar archivo</span>
-                                </Form.Label>
+                                <Form.Group controlId="formFileSm" className="mb-3">
+                                    <Form.Label >Seleccionar imagen</Form.Label>
+                                    <Form.Control type="file" size="sm" accept="image/jpeg,image/png,image/jpg,image/bmp" onChange={handleInputChange} />
+                                </Form.Group>
                             </Col>
                             <Col className='col-4'>
                                 <Image src={imagePrev} style={{ width: '100px', height: '100px', objectFit: 'cover' }}></Image>
-                            </Col>
-                        </Row>
-                        <Row className='mb-3'>
-                            <Col>
-                                <Form.Label >Activa o Desactva el catalgo</Form.Label>
-
-                                <Form.Check
-                                    type="switch"
-                                    name='activo'
-                                    defaultChecked={checked}
-                                    onClick={handleInputChange}
-                                />
                             </Col>
                         </Row>
                     </Modal.Body>
@@ -214,5 +332,19 @@ export default function Categories() {
         </>
     )
 }
-
-Categories.auth = true
+// Seleccion dinamica del Layout
+Categories.getLayout = function getLayout(page) {
+    return (
+        <Layout>{page}</Layout>
+    )
+}
+// Obtenemos la Data antes de cargar la pantalla
+export async function getStaticProps(){
+    const res = await fetch(`${process.env.NEXTAUTH_URL}/api/category_product`)
+    const categories = await res.json()
+    return {
+      props: {
+        categories,
+      },
+    }
+  }

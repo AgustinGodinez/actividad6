@@ -20,9 +20,6 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: {
           msg: 'La descripcion de la categoria es un valor requerido'
         },
-        isAlpha: {
-          msg: 'La categoria, solo se permite valores del alfabeto'
-        },
         max: {
           arg: 150,
           msg: 'El campo categoria solo permite 150 caracteres'
@@ -31,6 +28,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     url_image : {
       type: DataTypes.STRING
+    },
+    active: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
     },
     created_by:{
       type: DataTypes.INTEGER,

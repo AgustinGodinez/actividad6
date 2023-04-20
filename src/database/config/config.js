@@ -1,10 +1,18 @@
+'use strict'
 module.exports = {
-  development: {
+  development_: {
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
     host: process.env.DB_HOST,
-    dialect: process.env.DB_DIALECT
+    dialect: "mysql"
+  },
+  development: {
+    username: 'admin',
+    password: 'Transformacion2023#',
+    database: 'changarrito',
+    host: 'database-changarrito.ccgbjznbuuq7.us-east-1.rds.amazonaws.com',
+    dialect: 'mysql'
   },
   test: {
     username: 'root',
